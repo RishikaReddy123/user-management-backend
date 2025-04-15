@@ -13,12 +13,14 @@ const userSchema = new mongoose.Schema(
     phoneNumber: {
       type: String,
       required: true,
-      match: [/^\+?[1-9][0-9]{7,14}$/, "Phone number should be valid!"],
+      match: [/^(\+614|04)\d{8}$/, "Phone number should be valid!"],
+      unique: true,
     },
     email: {
       type: String,
       required: true,
       match: [/^\S+@\S+\.\S+$/, "Enter a valid email address"],
+      unique: true,
     },
     address: {
       type: String,
