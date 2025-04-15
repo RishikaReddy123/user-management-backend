@@ -34,4 +34,44 @@ router.post("/", validateUser, handleValidation, async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.find().sort({ createdAt: -1 });
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.patch("/:id", async (req, res) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser)
+      return res.status(404).json({ message: "User not found!" });
+
+    res
+      .status(200)
+      .json({ message: "User updated successfully!", user: updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const deleteUser = await User.findByIdAndDelete(req.params.id);
+    if (!deleteUser) {
+      return res.status(404).json({ message: "User not found!!" });
+    }
+    res.status(200).json({ message: "Deleted User successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 export default router;
